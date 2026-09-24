@@ -6,7 +6,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Code herunterladen
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Flutter installieren
         uses: subosito/flutter-action@v2
@@ -28,7 +28,7 @@ jobs:
           zip -qq -r app.ipa Payload
 
       - name: .ipa Datei hochladen
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: meine-ios-app
           path: app.ipa
