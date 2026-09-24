@@ -1,0 +1,34 @@
+name: iOS Build
+on: [push] # Baut die App bei jedem neuen Upload auf GitHub
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Code herunterladen
+        uses: actions/checkout@v3
+
+      - name: Flutter installieren
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Pakete laden
+        run: flutter pub get
+
+      - name: iOS ohne Signatur bauen
+        run: flutter build ios --release --no-codesign
+
+      - name: In eine .ipa Datei umwandeln
+        run: |
+          mkdir Payload
+          # Verschiebe die kompilierte App in den Payload-Ordner
+          mv build/ios/iphoneos/Runner.app Payload/
+          # Erstelle die .ipa Datei (ist eigentlich nur eine ZIP-Datei)
+          zip -qq -r app.ipa Payload
+
+      - name: .ipa Datei hochladen
+        uses: actions/upload-artifact@v3
+        with:
+          name: meine-ios-app
+          path: app.ipa
